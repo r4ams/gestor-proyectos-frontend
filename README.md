@@ -101,3 +101,15 @@ Puedes probar el sistema junto con el backend desde:
 -   Frontend: [http://localhost:3000](http://localhost:3000)
     
 -   Backend: [http://localhost:8000](http://localhost:8000)
+
+## 📁 Estructura de Carpetas (App Router)
+
+```bash
+/app
+ ├── login
+ ├── dashboard
+ ├── projects
+ │   ├── create
+ │   ├── [id]
+ │   └── [id]/edit
+ └── users
