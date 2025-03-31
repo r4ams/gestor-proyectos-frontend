@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🧠 Gestor de Proyectos — Frontend (Next.js + Tailwind + React Query)
 
-## Getting Started
+Este es el **frontend** del sistema de gestión de proyectos desarrollado para la materia **Desarrollo de Proyectos de Software - UDB**. Permite crear, editar y eliminar proyectos y tareas, así como administrar usuarios.
 
-First, run the development server:
+> Este frontend consume el backend disponible en: [`proyecto_udb`](https://github.com/r4ams/proyecto_udb)
 
+---
+
+## 🚀 Tecnologías
+
+- [Next.js 15 (App Router)](https://nextjs.org)
+- [React 18](https://reactjs.org)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Flowbite React](https://flowbite-react.com)
+- [React Query (TanStack)](https://tanstack.com/query/v5)
+- [Heroicons](https://heroicons.com)
+- [Laravel Passport (para autenticación vía API)](https://laravel.com/docs/passport)
+
+---
+
+## 🔧 Instalación
+
+### 1. Clonar el repositorio
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/r4ams/gestor-proyectos-frontend.git
+cd gestor-proyectos-frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Instalar dependencias
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+npm install`
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Configurar la URL del backend en el archivo: lib/axios.js
 
-## Learn More
+```bash
+const  api  =  axios.create({
+	baseURL:  'http://localhost:8000/api',
+});
+```
+### 4. Ejecutar la app
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🔐 Autenticación
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+El sistema utiliza **Laravel Passport** para autenticación mediante tokens. Al iniciar sesión, se almacena un `access_token` en `localStorage` para autorizar las peticiones.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
+## 🧰 Funcionalidades
 
-## Deploy on Vercel
+### 👥 Autenticación
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-   Iniciar sesión con email y contraseña
+    
+-   Cierre de sesión manual
+    
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 📂 Gestión de Proyectos
+
+-   Listado de proyectos
+    
+-   Crear proyecto
+    
+-   Editar proyecto
+    
+-   Eliminar proyecto
+    
+-   Ver detalles del proyecto (incluye tareas)
+    
+
+### ✅ Gestión de Tareas
+
+-   Ver tareas por proyecto
+    
+-   Crear tarea
+    
+-   Editar tarea (modal)
+    
+-   Eliminar tarea
+    
+-   Marcar como completada (checkbox)
+    
+
+### 👤 Gestión de Usuarios
+
+-   Listado de usuarios
+    
+-   Crear nuevo usuario
+    
+-   Eliminar usuario
+
+---
+
+## 🧪 Pruebas
+
+Puedes probar el sistema junto con el backend desde:
+
+-   Frontend: [http://localhost:3000](http://localhost:3000)
+    
+-   Backend: [http://localhost:8000](http://localhost:8000)
