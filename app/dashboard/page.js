@@ -93,6 +93,11 @@ export default function Dashboard() {
                   <TrashIcon className="w-4 h-4" />
                   Eliminar
                 </Button>
+                <Link href={`/projects/${project.id}`}>
+                  <Button color="blue" size="xs" className="flex items-center gap-1">
+                    Ver
+                  </Button>
+                </Link>
               </div>
             </li>
           ))}

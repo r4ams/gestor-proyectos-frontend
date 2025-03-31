@@ -1,9 +1,10 @@
-"use client";
-import { useParams } from 'next/navigation';
+'use client';
+
+import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { Card, TextInput, Button, Label } from 'flowbite-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Button, Label, TextInput, Textarea, Checkbox } from 'flowbite-react';
 
 const fetchProject = async (id) => {
   const { data } = await api.get(`/projects/${id}`);
@@ -17,91 +18,100 @@ const fetchTasks = async (id) => {
 
 export default function ProjectDetail() {
   const { id } = useParams();
+  const router = useRouter();
   const queryClient = useQueryClient();
-  const [newTask, setNewTask] = useState('');
 
-  const { data: project, isLoading: loadingProject, isError: errorProject } = useQuery({
+  const [newTask, setNewTask] = useState({ title: '', description: '' });
+
+  const { data: project, isLoading: loadingProject } = useQuery({
     queryKey: ['project', id],
     queryFn: () => fetchProject(id),
-    enabled: !!id
   });
 
-  const { data: tasks, isLoading: loadingTasks, isError: errorTasks } = useQuery({
+  const { data: tasks, isLoading: loadingTasks } = useQuery({
     queryKey: ['tasks', id],
     queryFn: () => fetchTasks(id),
-    enabled: !!id
   });
 
   const createTask = useMutation({
-    mutationFn: async () => {
-      await api.post(`/projects/${id}/tasks`, { title: newTask });
-    },
+    mutationFn: (task) => api.post(`/projects/${id}/tasks`, task),
     onSuccess: () => {
-      setNewTask('');
-      queryClient.invalidateQueries({ queryKey: ['tasks', id] });
-    }
+      queryClient.invalidateQueries(['tasks', id]);
+      setNewTask({ title: '', description: '' });
+    },
   });
 
   const deleteTask = useMutation({
-    mutationFn: async (taskId) => {
-      await api.delete(`/projects/${id}/tasks/${taskId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks', id] });
-    }
+    mutationFn: (taskId) => api.delete(`/tasks/${taskId}`),
+    onSuccess: () => queryClient.invalidateQueries(['tasks', id]),
   });
 
-  if (loadingProject) return <div className="p-8 text-center">Cargando proyecto...</div>;
-  if (errorProject || !project) return <div className="p-8 text-center text-red-600">Error al cargar el proyecto.</div>;
+  const toggleCompletion = useMutation({
+    mutationFn: (task) => api.put(`/tasks/${task.id}`, {
+      ...task,
+      completed: !task.completed,
+    }),
+    onSuccess: () => queryClient.invalidateQueries(['tasks', id]),
+  });
+
+  const handleTaskSubmit = (e) => {
+    e.preventDefault();
+    createTask.mutate(newTask);
+  };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto space-y-4">
-      <Card>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">{project.name}</h1>
-        <p className="text-gray-600">{project.description || 'Sin descripción'}</p>
-      </Card>
+    <div className="max-w-3xl mx-auto p-6">
+      <Button color="gray" onClick={() => router.push('/dashboard')} className="mb-4">
+        ← Volver al Dashboard
+      </Button>
 
-      <Card>
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">Tareas</h2>
+      {loadingProject ? (
+        <p>Cargando proyecto...</p>
+      ) : (
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-blue-600 mb-2">{project.name}</h1>
+          <p className="text-gray-600">{project.description}</p>
+        </div>
+      )}
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (newTask.trim() !== '') createTask.mutate();
-          }}
-          className="flex flex-col md:flex-row gap-4 mb-6"
-        >
-          <TextInput
-            placeholder="Nueva tarea"
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            required
-            className="flex-1"
-          />
-          <Button type="submit" color="blue">
-            Agregar
-          </Button>
-        </form>
+      <form onSubmit={handleTaskSubmit} className="space-y-4 mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Agregar nueva tarea</h2>
+        <div>
+          <Label htmlFor="name" value="Nombre de la tarea" />
+          <TextInput id="name" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} required />
+        </div>
+        <div>
+          <Label htmlFor="description" value="Descripción" />
+          <Textarea id="description" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} />
+        </div>
+        <Button type="submit" color="blue">Agregar</Button>
+      </form>
 
-        {loadingTasks ? (
-          <p>Cargando tareas...</p>
-        ) : errorTasks ? (
-          <p className="text-red-600">Error al cargar tareas.</p>
-        ) : tasks.length === 0 ? (
-          <p className="text-gray-500">No hay tareas aún.</p>
-        ) : (
-          <ul className="space-y-2">
-            {tasks.map((task) => (
-              <li key={task.id} className="flex items-center justify-between bg-gray-50 p-3 rounded border">
-                <span>{task.title}</span>
+      {loadingTasks ? (
+        <p>Cargando tareas...</p>
+      ) : tasks.length === 0 ? (
+        <p className="text-gray-500">No hay tareas aún.</p>
+      ) : (
+        <ul className="space-y-3">
+          {tasks.map((task) => (
+            <li
+              key={task.id}
+              className="p-4 bg-white rounded border flex justify-between items-center"
+            >
+              <div>
+                <h3 className={`font-semibold ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>{task.title}</h3>
+                <p className="text-sm text-gray-600">{task.description}</p>
+              </div>
+              <div className="flex gap-2 items-center">
+                <Checkbox checked={task.completed} onChange={() => toggleCompletion.mutate(task)} />
                 <Button size="xs" color="failure" onClick={() => deleteTask.mutate(task.id)}>
                   Eliminar
                 </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
