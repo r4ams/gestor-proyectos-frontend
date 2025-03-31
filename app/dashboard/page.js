@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import useAuthGuard from '@/hooks/useAuthGuard';
 import { Button } from 'flowbite-react';
-import { PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/solid';
+import { PencilSquareIcon, TrashIcon, PlusIcon, ArrowRightOnRectangleIcon, UsersIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 
 const fetchProjects = async () => {
@@ -46,20 +46,41 @@ export default function Dashboard() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem('access_token');
+      window.location.href = '/login';
+    } catch (error) {
+      alert('Error al cerrar sesión');
+    }
+  };
+
   if (!isAuthChecked) return <p className="p-4">Verificando sesión...</p>;
   if (isLoading) return <p className="p-4">Cargando proyectos...</p>;
   if (isError) return <p className="p-4 text-red-600">Error al cargar proyectos.</p>;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto relative">
+    <div className="p-8 max-w-5xl mx-auto relative">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-blue-600">Mis Proyectos</h1>
-        <Link href="/projects/create">
-          <Button color="blue" className="flex items-center gap-2">
-            <PlusIcon className="w-5 h-5" />
-            Crear proyecto
+        <div className="flex gap-3">
+          <Link href="/projects/create">
+            <Button color="blue" className="flex items-center gap-2">
+              <PlusIcon className="w-5 h-5" />
+              Crear proyecto
+            </Button>
+          </Link>
+          <Link href="/users">
+            <Button color="gray" className="flex items-center gap-2">
+              <UsersIcon className="w-5 h-5" />
+              Administrar usuarios
+            </Button>
+          </Link>
+          <Button color="failure" onClick={handleLogout} className="flex items-center gap-2">
+            <ArrowRightOnRectangleIcon className="w-5 h-5" />
+            Cerrar sesión
           </Button>
-        </Link>
+        </div>
       </div>
 
       {projects.length === 0 ? (
