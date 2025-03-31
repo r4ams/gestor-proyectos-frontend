@@ -4,6 +4,8 @@ Este es el **frontend** del sistema de gestión de proyectos desarrollado para l
 
 > Este frontend consume el backend disponible en: [`proyecto_udb`](https://github.com/r4ams/proyecto_udb)
 
+> Creador: Ramón Humberto Ramos Ramirez - RR121769
+
 ---
 
 ## 🚀 Tecnologías
