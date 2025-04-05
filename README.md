@@ -6,6 +6,8 @@ Este es el **frontend** del sistema de gestión de proyectos desarrollado para l
 
 > Creador: Ramón Humberto Ramos Ramirez - RR121769
 
+> Video defensa: [`proyecto_1`](https://udbedu-my.sharepoint.com/:v:/g/personal/rr121769_alumno_udb_edu_sv/EWrTJpzV0PRCgirSqNLGOiwBnPFCYNJ2PRXYoxupkFyeWA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=SqxvTu)
+
 ---
 
 ## 🚀 Tecnologías
